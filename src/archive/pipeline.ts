@@ -3,8 +3,8 @@ import { JSDOM } from "jsdom";
 import TurndownService from "turndown";
 import Parser from "@postlight/parser";
 
-import { generateWARC } from "./warc";
-import { ArchiveResult } from "./types";
+import { generateWARC } from "./warc.js";
+import { ArchiveResult } from "./types.js";
 
 /**
  * The main pipeline that takes a URL and returns:

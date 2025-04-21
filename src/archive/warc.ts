@@ -5,7 +5,7 @@ import path from "path";
 export async function generateWARC(url: string): Promise<string> {
   const timestamp = Date.now().toString();
   const baseDir = `/tmp/${timestamp}`;
-  const warcPath = path.join(baseDir, `${timestamp}.warc.gz`);
+  const warcPath = `${timestamp}.warc.gz`;
 
   console.log("Running wget...");
   await new Promise<void>((res, rej) => {

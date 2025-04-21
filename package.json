@@ -1,11 +1,15 @@
 {
-  "name": "scrape",
+  "name": "archive",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.ts",
+  "description": "Archive any webpage to markdown, metadata, media, and WARC",
+  "bin": {
+    "archive": "dist/bin/archive.js"
+  },
+  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
-    "main": "ts-node src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "archive": "ts-node bin/archive.ts"
   },
   "dependencies": {
     "@mozilla/readability": "^0.6.0",
@@ -15,12 +19,13 @@
     "jsdom": "^26.1.0",
     "turndown": "^7.2.0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "devDependencies": {
-    "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
-  }
+  "keywords": [
+    "archive",
+    "web",
+    "markdown",
+    "warc",
+    "cli"
+  ],
+  "author": "skyash",
+  "license": "MIT"
 }
