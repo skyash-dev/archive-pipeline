@@ -5,6 +5,8 @@ import Parser from "@postlight/parser";
 
 import { generateWARC } from "./warc.js";
 import { ArchiveResult } from "./types.js";
+import { fillMissingMetadata } from "./llm.js";
+import { askLLMConsent } from "./askLLMConsent.js";
 
 /**
  * The main pipeline that takes a URL and returns:
@@ -40,6 +42,21 @@ export async function archivePipeline(url: string): Promise<ArchiveResult> {
     await Parser.parse(url);
 
   const metadata = { title, author, date_published, dek, lead_image_url };
+
+  if (!author || !date_published || !dek || !lead_image_url) {
+    const apiKey = await askLLMConsent();
+    if (apiKey) {
+      try {
+        const llmFields = await fillMissingMetadata(apiKey, title, markdown);
+        metadata.author ??= llmFields.author;
+        metadata.date_published ??= llmFields.date_published;
+        metadata.dek ??= llmFields.dek;
+        metadata.lead_image_url ??= llmFields.lead_image_url;
+      } catch (err) {
+        console.error("Gemini LLM failed:", err);
+      }
+    }
+  }
 
   return {
     metadata,
