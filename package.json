@@ -1,5 +1,5 @@
 {
-  "name": "archive-pipeline",
+  "name": "smart-archiver",
   "version": "1.0.0",
   "description": "Archive any webpage to markdown, metadata, media, and WARC",
   "bin": {

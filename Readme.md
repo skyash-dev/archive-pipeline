@@ -15,11 +15,11 @@ A powerful pipeline to **extract, convert, and preserve webpages** into structur
 
 ## Features
 
-- 🧠 Auto-extract readable content via [Mozilla Readability](https://github.com/mozilla/readability)
-- 📝 Converts HTML content to Markdown using [Turndown](https://github.com/mixmark-io/turndown)
-- 📦 Saves full WARC archive using `wget`
-- 🔎 Extracts all media and outbound links
-- 🤖 Optionally uses **Gemini AI** to fill missing metadata like author, date, description
+- Auto-extract readable content via [Mozilla Readability](https://github.com/mozilla/readability)
+- Converts HTML content to Markdown using [Turndown](https://github.com/mixmark-io/turndown)
+- Saves full WARC archive using `wget`
+- Extracts all media and outbound links
+- Optionally uses **Gemini AI** to fill missing metadata like author, date, description
 
 ---
 
