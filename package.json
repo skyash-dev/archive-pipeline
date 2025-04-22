@@ -1,6 +1,6 @@
 {
-  "name": "archive",
-  "version": "1.0.2",
+  "name": "archive-pipeline",
+  "version": "1.0.0",
   "description": "Archive any webpage to markdown, metadata, media, and WARC",
   "bin": {
     "archive": "dist/bin/archive.js"
