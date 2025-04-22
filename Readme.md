@@ -13,7 +13,7 @@ A powerful pipeline to **extract, convert, and preserve webpages** into structur
 
 ---
 
-## ✨ Features
+## Features
 
 - 🧠 Auto-extract readable content via [Mozilla Readability](https://github.com/mozilla/readability)
 - 📝 Converts HTML content to Markdown using [Turndown](https://github.com/mixmark-io/turndown)
@@ -23,7 +23,7 @@ A powerful pipeline to **extract, convert, and preserve webpages** into structur
 
 ---
 
-## 📥 Installation
+## Installation
 
 ```bash
 npm install -g archive
@@ -31,7 +31,7 @@ npm install -g archive
 
 ---
 
-## 🚀 Usage
+## Usage
 
 ```ts
 import { archivePipeline } from "archive";
@@ -47,7 +47,7 @@ console.log(result.warcPath); // Path to saved .warc.gz file
 
 ---
 
-## 📚 Output Format
+## Output Format
 
 ```ts
 type ArchiveResult = {
@@ -67,7 +67,7 @@ type ArchiveResult = {
 
 ---
 
-## 🧠 Gemini LLM Integration (Optional)
+## Gemini LLM Integration (Optional)
 
 If fields like `author`, `date_published`, or `dek` are missing, the CLI will ask:
 
@@ -79,7 +79,7 @@ If you agree, you’ll be prompted to **safely enter your API key**, and the mod
 
 ---
 
-## 🔧 Dependencies
+## Dependencies
 
 - `@mozilla/readability` – extract clean article text
 - `@postlight/parser` – extract metadata using meta tags
@@ -89,7 +89,7 @@ If you agree, you’ll be prompted to **safely enter your API key**, and the mod
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 src/
@@ -104,7 +104,7 @@ src/
 
 ---
 
-## 💡 Example CLI Use
+## Example CLI Use
 
 ```bash
 npm archive https://example.com
@@ -112,6 +112,6 @@ npm archive https://example.com
 
 ---
 
-## 🙌 Contributing
+## Contributing
 
 PRs welcome! If you’d like to contribute support for other LLMs, alternate archivers, or extra metadata, feel free to fork and submit.
