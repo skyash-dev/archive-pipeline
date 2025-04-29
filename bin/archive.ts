@@ -6,7 +6,7 @@ import fs from "fs/promises";
 const url = process.argv[2];
 
 if (!url) {
-  console.error("Usage: bun scripts/archive.ts <url>");
+  console.error("Usage: npx smart-archiver <url>");
   process.exit(1);
 }
 
