@@ -8,7 +8,7 @@ export interface Metadata {
 
 export interface ArchiveResult {
   metadata: Metadata;
-  markdown: string;
+  markdownPath: string;
   media: string[];
   links: string[];
   warcPath: string;

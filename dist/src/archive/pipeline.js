@@ -6,6 +6,7 @@ import { generateWARC } from "./warc.js";
 import { fillMissingMetadata } from "./llm.js";
 import { askLLMConsent } from "./askLLMConsent.js";
 import sanitizeHtml from "sanitize-html";
+import fs from "fs/promises";
 /**
  * The main pipeline that takes a URL and returns:
  * - metadata
@@ -73,6 +74,8 @@ export async function archivePipeline(url) {
         .replace(/\\\[/g, "[")
         .replace(/\\\]/g, "]")
         .replace(/\[\s*[\n\r\t ]+\s*(\d+)\]/g, "[$1]");
+    const markdownPath = `archive-${Date.now()}.md`;
+    await fs.writeFile(markdownPath, markdown);
     const media = Array.from(doc.querySelectorAll("img, video")).map((el) => el.src);
     const links = Array.from(doc.querySelectorAll("a")).map((el) => el.href);
     const warcPath = await generateWARC(url);
@@ -95,7 +98,7 @@ export async function archivePipeline(url) {
     }
     return {
         metadata,
-        markdown,
+        markdownPath,
         media,
         links,
         warcPath,
