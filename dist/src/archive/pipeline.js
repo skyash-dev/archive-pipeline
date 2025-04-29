@@ -5,6 +5,7 @@ import Parser from "@postlight/parser";
 import { generateWARC } from "./warc.js";
 import { fillMissingMetadata } from "./llm.js";
 import { askLLMConsent } from "./askLLMConsent.js";
+import sanitizeHtml from "sanitize-html";
 /**
  * The main pipeline that takes a URL and returns:
  * - metadata
@@ -21,8 +22,21 @@ export async function archivePipeline(url) {
     // Parse article content
     const reader = new Readability(doc);
     const article = reader.parse();
+    const rawHtml = article?.content || "";
+    const cleanedHtml = sanitizeHtml(rawHtml, {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+        allowedAttributes: {
+            a: ["href", "name", "target"],
+            img: ["src", "alt"],
+        },
+    });
     const turndown = new TurndownService();
-    const markdown = turndown.turndown(article?.content || "");
+    turndown.addRule("fixBackslashLinks", {
+        filter: (node) => node.nodeName === "A" && node.textContent?.startsWith("\\["),
+        replacement: (content, node) => `[${content}](${node.href})`,
+    });
+    const rawMarkdown = turndown.turndown(cleanedHtml);
+    const markdown = rawMarkdown.replace(/\\n/g, "\n"); // fix literal `\n`
     const media = Array.from(doc.querySelectorAll("img, video")).map((el) => el.src);
     const links = Array.from(doc.querySelectorAll("a")).map((el) => el.href);
     const warcPath = await generateWARC(url);

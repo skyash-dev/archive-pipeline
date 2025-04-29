@@ -1,6 +1,6 @@
 {
   "name": "smart-archiver",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Archive any webpage to markdown, metadata, media, and WARC",
   "bin": {
     "archive": "dist/bin/archive.js"
@@ -19,6 +19,7 @@
     "@types/turndown": "^5.0.5",
     "jsdom": "^26.1.0",
     "prompt-sync": "^4.2.0",
+    "sanitize-html": "^2.16.0",
     "turndown": "^7.2.0",
     "typescript": "^5.8.3"
   },
