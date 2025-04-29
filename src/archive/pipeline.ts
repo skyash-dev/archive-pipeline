@@ -25,29 +25,66 @@ export async function archivePipeline(url: string): Promise<ArchiveResult> {
   const dom = new JSDOM(html, { url });
   const doc = dom.window.document;
 
-  // Parse article content
   const reader = new Readability(doc);
   const article = reader.parse();
 
-  const rawHtml = article?.content || "";
+  if (!article) {
+    throw new Error("Failed to parse article");
+  }
+
+  const rawHtml = article.content;
+
   const cleanedHtml = sanitizeHtml(rawHtml, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+    allowedTags: [
+      "p",
+      "b",
+      "strong",
+      "i",
+      "em",
+      "a",
+      "img",
+      "ul",
+      "ol",
+      "li",
+      "blockquote",
+      "code",
+      "pre",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "br",
+    ],
     allowedAttributes: {
       a: ["href", "name", "target"],
       img: ["src", "alt"],
     },
+    allowedSchemes: ["http", "https", "mailto", "data"],
   });
 
-  const turndown = new TurndownService();
-  turndown.addRule("fixBackslashLinks", {
-    filter: (node) =>
-      node.nodeName === "A" && node.textContent?.startsWith("\\["),
-    replacement: (content, node) =>
-      `[${content}](${(node as HTMLAnchorElement).href})`,
+  const turndown = new TurndownService({
+    headingStyle: "atx",
+    codeBlockStyle: "fenced",
+    bulletListMarker: "-",
   });
 
-  const rawMarkdown = turndown.turndown(cleanedHtml);
-  const markdown = rawMarkdown.replace(/\\n/g, "\n"); // fix literal `\n`
+  turndown.addRule("image", {
+    filter: "img",
+    replacement: function (content, node) {
+      const img = node as HTMLImageElement;
+      const alt = img.alt || "";
+      const src = img.src || "";
+      return src ? `![${alt}](${src})` : "";
+    },
+  });
+
+  const rawMarkdown = turndown.turndown(cleanedHtml).trim();
+  const markdown = rawMarkdown
+    .replace(/\\\[/g, "[")
+    .replace(/\\\]/g, "]")
+    .replace(/\[\s*[\n\r\t ]+\s*(\d+)\]/g, "[$1]");
 
   const media = Array.from(doc.querySelectorAll("img, video")).map(
     (el: any) => el.src

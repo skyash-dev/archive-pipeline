@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "Archive any webpage to markdown, metadata, media, and WARC",
   "bin": {
-    "archive": "dist/bin/archive.js"
+    "archive": "./dist/bin/archive.js"
   },
   "type": "module",
   "main": "dist/index.js",
