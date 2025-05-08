@@ -1,4 +1,4 @@
-import { Readability } from "@mozilla/readability";
+import Defuddle from "defuddle";
 import { JSDOM } from "jsdom";
 import TurndownService from "turndown";
 import Parser from "@postlight/parser";
@@ -20,7 +20,7 @@ export async function archivePipeline(url) {
     const html = await res.text();
     const dom = new JSDOM(html, { url });
     const doc = dom.window.document;
-    const reader = new Readability(doc);
+    const reader = new Defuddle(doc);
     const article = reader.parse();
     if (!article) {
         throw new Error("Failed to parse article");
@@ -74,13 +74,11 @@ export async function archivePipeline(url) {
         .replace(/\\\[/g, "[")
         .replace(/\\\]/g, "]")
         .replace(/\[\s*[\n\r\t ]+\s*(\d+)\]/g, "[$1]");
-    const markdownPath = `archive-${Date.now()}.md`;
-    await fs.writeFile(markdownPath, markdown);
     const media = Array.from(doc.querySelectorAll("img, video")).map((el) => el.src);
     const links = Array.from(doc.querySelectorAll("a")).map((el) => el.href);
-    const warcPath = await generateWARC(url);
+    links.push(url);
     const { title, author, date_published, dek, lead_image_url } = await Parser.parse(url);
-    const metadata = { title, author, date_published, dek, lead_image_url };
+    const metadata = { title, author, date_published, dek };
     if (!author || !date_published || !dek || !lead_image_url) {
         const apiKey = await askLLMConsent();
         if (apiKey) {
@@ -89,13 +87,21 @@ export async function archivePipeline(url) {
                 metadata.author ??= llmFields.author;
                 metadata.date_published ??= llmFields.date_published;
                 metadata.dek ??= llmFields.dek;
-                metadata.lead_image_url ??= llmFields.lead_image_url;
             }
             catch (err) {
                 console.error("Gemini LLM failed:", err);
             }
         }
     }
+    if (markdown.length > 100 &&
+        !metadata.author &&
+        !metadata.date_published &&
+        !metadata.dek) {
+        throw new Error("Incomplete Markdown or Metadata!");
+    }
+    const warcPath = await generateWARC(url, title);
+    const markdownPath = `archive-${title}.md`;
+    await fs.writeFile(markdownPath, markdown);
     return {
         metadata,
         markdownPath,

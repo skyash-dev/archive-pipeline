@@ -2,18 +2,39 @@
 
 import { archivePipeline } from "../src/archive/pipeline.js";
 import fs from "fs/promises";
+import fetch from "node-fetch";
 
 const url = process.argv[2];
 
-if (!url) {
-  console.error("Usage: npx smart-archiver <url>");
+async function isAlive(url: string): Promise<boolean> {
+  try {
+    const res = await fetch(url, { method: "HEAD" });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Timeout")), ms)
+    ),
+  ]);
+}
+
+if (!url && !isAlive) {
+  console.error("Invalid URL! \n Usage: npx smart-archiver <url>");
   process.exit(1);
 }
 
-const result = await archivePipeline(url);
-
-await fs.writeFile(
-  `archive-${Date.now()}.json`,
-  JSON.stringify(result, null, 2)
-);
-console.log("✅ Archive pipeline completed");
+try {
+  const result = await withTimeout(archivePipeline(url), 120000); // 2 min timeout
+  await fs.writeFile(
+    `archive-${result.metadata.title}.json`,
+    JSON.stringify(result, null, 2)
+  );
+  console.log(`✅ Success for ${url}`);
+} catch (err) {
+  console.error(`❌ Failed for ${url}:`, err.message);
+}

@@ -40,6 +40,5 @@ export async function fillMissingMetadata(
     author: extractField("Author"),
     date_published: extractField("Date Published"),
     dek: extractField("Dek"),
-    lead_image_url: extractField("Lead Image URL"),
   };
 }

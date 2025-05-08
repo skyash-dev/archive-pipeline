@@ -1,13 +1,12 @@
 import { spawn } from "child_process";
 import fs from "fs/promises";
-export async function generateWARC(url) {
-    const timestamp = Date.now().toString();
-    const baseDir = `/tmp/${timestamp}`;
-    const warcPath = `${timestamp}.warc.gz`;
+export async function generateWARC(url, title) {
+    const baseDir = `/tmp/${title}`;
+    const warcPath = `${title}.warc.gz`;
     console.log("Running wget...");
     await new Promise((res, rej) => {
         const child = spawn("wget", [
-            `--warc-file=${timestamp}`,
+            `--warc-file=${title}`,
             "--page-requisites",
             "--convert-links",
             "--no-verbose",

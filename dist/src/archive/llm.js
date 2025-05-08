@@ -29,6 +29,5 @@ export async function fillMissingMetadata(apiKey, title, content) {
         author: extractField("Author"),
         date_published: extractField("Date Published"),
         dek: extractField("Dek"),
-        lead_image_url: extractField("Lead Image URL"),
     };
 }

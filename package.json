@@ -1,6 +1,6 @@
 {
   "name": "smart-archiver",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "Archive any webpage to markdown, metadata, media, and WARC",
   "bin": {
     "smart-archiver": "dist/bin/archive.js"
@@ -13,10 +13,10 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
-    "@mozilla/readability": "^0.6.0",
     "@postlight/parser": "^2.2.3",
     "@types/jsdom": "^21.1.7",
     "@types/turndown": "^5.0.5",
+    "defuddle": "^0.6.2",
     "jsdom": "^26.1.0",
     "prompt-sync": "^4.2.0",
     "sanitize-html": "^2.16.0",
